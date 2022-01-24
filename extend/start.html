@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>火线页游辅助</title>
+
+  <link rel="stylesheet" type="text/css" href="bs/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="bs/css/bootstrap-table.css">
+  
+  <script src="bs/js/jquery.js"></script>
+  <script src="bs/js/bootstrap.min.js"></script>
+  <script src="bs/js/bootstrap-table.js"></script>
+  <script src="bs/js/bootstrap-table-zh-CN.js"></script>
+  <script src="bs/js/bootstrap-table-editor.js"></script>
+  <script src="bs/js/qwebchannel.js"></script>
+
+
+  <script>
+      function load(){
+        columns = [
+          {checkbox: true,formatter:function(value, item, index) {
+              return '';
+          }},
+          {title: "编号",field: "rownum",sortable: true,width:100,editable:true},
+          {title: "账号",field: "accout",sortable: true,width:200,editable:true},
+          {title: "密码",field: "password",sortable: true,width:200,editable:true},
+          {title: "服务器",field: "server",sortable: true,width:200,editable:true},
+          {title: "平台",field: "platform",sortable: true,width:200,editable:true},
+          {title: "执行配置",field: "extConf",sortable: true,width:200,editable:true},
+          {title: "等级",field: "level",sortable: true,width:200,editable:true},
+          {title: "状态",field: "status",sortable: true,width:200,editable:true}];
+        tableOptions = {
+          columns:columns,
+          showRefresh: false,
+          clickEdit: true,
+          editable:true, //editable需要设置为 true
+        }
+        $("#accoutList").bootstrapTable(tableOptions);
+
+        $.getJSON('data/conf.json',data=>{
+          $("#accoutList").bootstrapTable("load",data);
+          tableData = data
+        })
+
+      }
+
+      function saveconf(value){
+        var rows = $('#accoutList').bootstrapTable('getData')
+        return rows
+      }
+
+       function getSelectRows(value){
+        var selectRows = $('#accoutList').bootstrapTable('getSelections');
+        if(selectRows == null||selectRows.length==0){
+          $('#myModal').modal('show')
+          return '';
+        }else{
+          return selectRows;
+        }
+      }
+  </script>
+
+</head>
+
+<body class="fixed-sidebar full-height-layout" onload="load()">
+  <div>
+    <ul class="nav nav-pills nav-justified">
+      <li role="presentation" class="active"><a href="#">控制台</a></li>
+      <li role="presentation"><a href="#">验证</a></li>
+      <li role="presentation"><a href="#">服务器填法</a></li>
+      <li role="presentation"><a href="#">日志</a></li>
+    </ul>
+  </div>
+
+  <div id = "accoutList" style="border:1;align:center;width:100%"></div>
+  <!-- 模态框（Modal） -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">火线页游辅助</h4>
+            </div>
+            <div class="modal-body">请先择游戏之后再点击启动！</div>
+          </div>　
+      </div>　
+  </div>
+</body>
+
+</html>
