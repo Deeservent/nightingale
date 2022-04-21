@@ -10,6 +10,7 @@ from GameCenter import GameCenter
 
 
 class MainWindow(QMainWindow):
+
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.setWindowTitle('夜莺辅助')
@@ -55,6 +56,7 @@ class MainWindow(QMainWindow):
             password = acount["password"]
             print(username,password)
             self.gameweb = GameCenter()
+            self.gameweb.start_game(username,password)
 
 
 
