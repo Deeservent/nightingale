@@ -1,4 +1,3 @@
-import os
 import sys
 import json
 
@@ -7,7 +6,7 @@ from PyQt5.QtCore import QUrl, QFileInfo
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineSettings
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QMainWindow
 
-from NightingaleGame import *
+from GameCenter import GameCenter
 
 
 class MainWindow(QMainWindow):
@@ -55,8 +54,7 @@ class MainWindow(QMainWindow):
             username = acount["accout"]
             password = acount["password"]
             print(username,password)
-            self.gameweb = self.webview.createWindow(self)
-            ng = NightingaleGame(self.gameweb)
+            self.gameweb = GameCenter()
 
 
 

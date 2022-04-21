@@ -1,7 +1,13 @@
+import logging
+
 from PyQt5.QtCore import QUrl
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineSettings
+from PyQt5.QtWidgets import  QMainWindow
 
+logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-class NightingaleGame():
+class GameCenter(QMainWindow):
     baseUrl = "https://wan.ludashi.com/"
     loginUrl = "https://wan.ludashi.com/account/index"
     gamePage = "http://wan.ludashi.com/yeyou/cjzg"
@@ -9,14 +15,27 @@ class NightingaleGame():
     loginStatus = False
     ckCode = False
 
-    def __init__(self, webview):
-        super().__init__()
-        self.browser = webview
-        # 指定打开界面的 URL
-        self.browser.setUrl(QUrl(self.loginUrl))
-        self.browser.page().loadFinished.connect(self.autoLogin)
-        # 让浏览器相应url地址的变化
-        self.browser.urlChanged.connect(self.opendGame)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        logging.info(args)
+        self.setWindowTitle('夜莺辅助')
+        self.setWindowIcon(QIcon("extend/images/title.jpeg"))
+        self.browser_init()
+
+    def browser_init(self):
+      self.browser = QWebEngineView()
+      self.browser.settings().setAttribute(QWebEngineSettings.PluginsEnabled, True)
+      self.browser.settings().setAttribute(QWebEngineSettings.JavascriptEnabled, True)
+      self.browser.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
+      self.setCentralWidget(self.browser)
+      self.showMaximized()
+      # 指定打开界面的 URL
+      self.browser.setUrl(QUrl(self.loginUrl))
+      self.browser.page().loadFinished.connect(self.autoLogin)
+      # 让浏览器相应url地址的变化
+      self.browser.urlChanged.connect(self.opendGame)
+
+
 
     def autoLogin(self):
         if self.loginStatus == 1 :
