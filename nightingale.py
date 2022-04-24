@@ -48,15 +48,17 @@ class MainWindow(QMainWindow):
       self.webview.page().runJavaScript('getSelectRows("' + value + '");',self.startSelectGame_callback)
 
   def startSelectGame_callback(self, result):
+
       if result is None:
           print("请选择账号")
       else:
           for acount in result:
+            print(acount)
             username = acount["accout"]
             password = acount["password"]
             print(username,password)
             self.gameweb = GameCenter()
-            self.gameweb.start_game(username,password)
+            self.gameweb.start_game(acount)
 
 
 
@@ -77,5 +79,6 @@ if __name__ == "__main__":
     argvs = sys.argv
     app = QApplication(argvs)
     mainWin = MainWindow()
-    mainWin.showMaximized()
+    mainWin.show()
+    mainWin.resize(1500,900)
     sys.exit(app.exec_())
