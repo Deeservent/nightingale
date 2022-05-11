@@ -4,17 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9e79a21c-f4d5-4330-875f-171a8e2181c2" name="Changes" comment=" 代码初始化">
-      <change afterPath="$PROJECT_DIR$/TestPyauto.py" afterDir="false" />
+    <list default="true" id="9e79a21c-f4d5-4330-875f-171a8e2181c2" name="Changes" comment=" 新增矿洞挖矿任务">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GameCenter.py" beforeDir="false" afterPath="$PROJECT_DIR$/GameCenter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestPyauto.py" beforeDir="false" afterPath="$PROJECT_DIR$/TestPyauto.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extend/data/conf.json" beforeDir="false" afterPath="$PROJECT_DIR$/extend/data/conf.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extend/point/cjzg/tp001.bmp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extend/point/tp005.bmp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extend/point/tp006.bmp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extend/point/tp007.bmp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extend/point/tp008.bmp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extend/point/tp009.bmp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/nightingale.py" beforeDir="false" afterPath="$PROJECT_DIR$/nightingale.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -185,7 +179,14 @@
       <option name="project" value="LOCAL" />
       <updated>1650562996576</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary=" 新增矿洞挖矿任务">
+      <created>1650821105361</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1650821105361</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -201,10 +202,18 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value=" 代码初始化" />
-    <option name="LAST_COMMIT_MESSAGE" value=" 代码初始化" />
+    <MESSAGE value=" 新增矿洞挖矿任务" />
+    <option name="LAST_COMMIT_MESSAGE" value=" 新增矿洞挖矿任务" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/GameCenter.py</url>
+          <line>158</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint suspend="NONE" type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">

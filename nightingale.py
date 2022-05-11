@@ -53,10 +53,6 @@ class MainWindow(QMainWindow):
           print("请选择账号")
       else:
           for acount in result:
-            print(acount)
-            username = acount["accout"]
-            password = acount["password"]
-            print(username,password)
             self.gameweb = GameCenter()
             self.gameweb.start_game(acount)
 
@@ -79,6 +75,6 @@ if __name__ == "__main__":
     argvs = sys.argv
     app = QApplication(argvs)
     mainWin = MainWindow()
+    mainWin.resize(1500,1000)
     mainWin.show()
-    mainWin.resize(1500,900)
     sys.exit(app.exec_())

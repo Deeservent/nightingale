@@ -3,7 +3,7 @@ import logging
 import pyautogui
 from PyQt5.QtCore import QUrl, QThread, pyqtSignal
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineSettings, QWebEnginePage
+from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineSettings
 from PyQt5.QtWidgets import  QMainWindow
 import time
 import json
@@ -14,18 +14,20 @@ class GameCenter(QMainWindow):
     baseUrl = "https://wan.ludashi.com/"
     loginUrl = "https://wan.ludashi.com/account/index"
     gamePage = "http://wan.ludashi.com/yeyou/cjzg"
-    repair = "https://www.flash.cn/help/service0.html?85FCEE1368593B122C6A95E37C2FB48B538FF14A161A37DBFC0E502FBA95B01B" #需要修复flash
+    repair = "https://www.flash.cn/help/service0.html" #需要修复flash
     serverArea = 789
     loginStatus = False
     ckCode = False
-    userName = "13437176465"
-    passWord = "Ding1990"
+    userName = ""
+    passWord = ""
+    userInfo = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         logging.info(args)
         self.setWindowTitle('夜莺辅助')
         self.setWindowIcon(QIcon("extend/images/title.jpeg"))
+
         self.browser = GameWebEngineView(self)
         self.browser.page().profile().cookieStore().deleteAllCookies()
         self.browser.settings().setAttribute(QWebEngineSettings.PluginsEnabled, True)
@@ -35,15 +37,14 @@ class GameCenter(QMainWindow):
         # 让浏览器相应url地址的变化
         self.browser.urlChanged.connect(self.opendGame)
         self.setCentralWidget(self.browser)
-        self.showMaximized()
+        self.resize(1500, 1000)
+        self.show()
+        # self.showMaximized()
 
     def start_game(self,userInfo):
         logging.info("account:{0}".format(userInfo))
-        uname = userInfo["accout"]
-        pwd = userInfo["password"]
+        self.userInfo = userInfo
         server = userInfo["server"]
-        self.userName = uname
-        self.passWord = pwd
         self.serverArea = int(server)
         self.setWindowTitle('夜莺辅助-{0}'.format(self.serverArea))
         self.browser.setUrl(QUrl(self.loginUrl))  # 指定打开界面的 URL
@@ -52,6 +53,8 @@ class GameCenter(QMainWindow):
     def autoLogin(self):
         if self.loginStatus == 1 :
             return
+        uname = self.userInfo["accout"]
+        pwd =   self.userInfo["password"]
         js_function = '''
                 function autoLogin()
                 {{
@@ -69,7 +72,7 @@ class GameCenter(QMainWindow):
                     }}
                 }}
                 autoLogin();
-                '''.format(un=self.userName, pwd=self.passWord)
+                '''.format(un=uname, pwd=pwd)
         self.browser.page().runJavaScript(js_function, self.login_callback)
 
     def login_callback(self, result):
@@ -98,7 +101,6 @@ class GameCenter(QMainWindow):
         self.browser.page().runJavaScript(js_function, self.ckCaptchaCode_callback)
 
     def ckCaptchaCode_callback(self, result):
-
         if result == "faild" :
             self.checkCaptchaCode()
         else:
@@ -114,74 +116,53 @@ class GameCenter(QMainWindow):
             self.ckCode = True
             logging.info("进入游戏页面")
             self.browser.page().load(QUrl(gameUrl))
-        elif urlStr.find(self.gamePage) >= 0:
+        elif urlStr.find(self.gamePage) >= 0 or urlStr.find(self.repair) >= 0:
             logging.info("play game")
-            self.thread = Worker()
+            self.thread = Worker(self.userInfo)
             self.thread.start()
+
 
 
 class Worker(QThread):
     sinOut = pyqtSignal(str)    # 创建一个信号，信号必须在类创建时定义，不能在类创建后作为类的属性动态添加进来
 
-    def __init__(self, parent=None):
+    def __init__(self,gameParam,parent=None):
         super(Worker, self).__init__(parent)
-        self.working = True
-        self.num = 0
+        confName = gameParam["extConf"]
+        pyautogui.PAUSE = 0.01
         self.gameConf = None
-        with open('extend/data/conf/13437176465', 'r') as conf:
+        self.server = gameParam["server"]
+        with open('extend/data/conf/{0}'.format(confName), 'r') as conf:
             self.gameConf = json.load(conf)
+
     def __del__(self):
         self.working = False
         self.wait()
+
     def run(self):
-        self.sleep(30)
+        self.sleep(10)
         try:
-            self.num = 2
-            while self.working == True:
-                # 线程休眠2秒
-                logging.info("休眠结束")
-                if self.num == 0:
-                    logging.info("1-矿洞挖矿.bmp")
-                    location = pyautogui.locateOnWindow('extend/point/cjzg/KDWK/1.bmp', '夜莺辅助-{0}'.format(789))
-                    logging.info(location)
-                    if location is not None:
-                        pyautogui.click(location)
-                        self.num += 1
-                    else:
+            winTitle = '夜莺辅助-{0}'.format(self.server)
+            for gcf in self.gameConf:
+                print(gcf)
+                taskName = gcf["taskName"]
+                taskProcess = gcf["taskProcess"]
+                for task in taskProcess:
+                    pointPath = 'extend/point/cjzg/{0}/{1}'.format(taskName,task)
+                    logging.info(pointPath)
+                    location = None
+                    while location is None:
+                        location = pyautogui.locateOnWindow(pointPath,winTitle,grayscale=True,confidence=0.2)
                         self.sleep(2)
-                elif self.num == 1:
-                    logging.info("2-进入矿场.bmp")
-                    location = pyautogui.locateOnWindow('extend/point/cjzg/KDWK/2.bmp', '夜莺辅助-{0}'.format(789))
-                    logging.info(location)
-                    if location is not None:
-                        pyautogui.click(location)
-                        self.num += 1
-                    else:
-                        self.sleep(2)
-                elif self.num == 2:
-                    logging.info("3-前往挖矿")
-                    location = pyautogui.locateOnWindow('extend/point/cjzg/KDWK/3-1.bmp', '夜莺辅助-{0}'.format(789))
-                    logging.info(location)
-                    if location is not None:
-                        pyautogui.click(location)
-                        self.num += 1
-                    else:
-                        self.sleep(2)
-                elif self.num == 3:
-                    logging.info("4-确定挖矿.bmp")
-                    location = pyautogui.locateOnWindow('extend/point/cjzg/KDWK/4.bmp', '夜莺辅助-{0}'.format(789))
-                    logging.info(location)
-                    if location is not None:
-                        pyautogui.click(location)
-                        self.num += 1
-                    else:
-                        self.sleep(2)
-                else:
-                    self.working = False
+                        if location is not None:
+                            logging.info(location)
+                            pyautogui.click(location)
+                            pyautogui.cl
+
         except Exception as e:
             print("except",e)
-        finally:
-            print("finally")
+        # finally:
+        #     print("finally")
 
 
 
@@ -195,5 +176,7 @@ class GameWebEngineView(QWebEngineView):
         new_window = GameCenter()
         new_window.setCentralWidget(new_webview)
         new_window.showMaximized()
+        # new_window.resize(1300, 700)
+        # new_window.show()
         self.windowList.append(new_window)  # 注：没有这句会崩溃！！！
         return new_webview
